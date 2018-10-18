@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<!--اسم البُعد	القيمة
+forecast_detail_horizontal_padding	16dp
+forecast_detail_vertical_padding	44dp-->
+    <dimen name="forecast_detail_vertical_padding">44dp</dimen>
+    <dimen name="forecast_detail_horizontal_padding">16dp</dimen>
+</resources>
