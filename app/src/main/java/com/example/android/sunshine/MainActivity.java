@@ -31,6 +31,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.android.sunshine.data.SunshinePreferences;
 import com.example.android.sunshine.data.WeatherContract;
@@ -78,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements
     private int mPosition = RecyclerView.NO_POSITION;
 
     private ProgressBar mLoadingIndicator;
+    private TextView emptyView;
 
 
     @Override
@@ -138,9 +140,11 @@ public class MainActivity extends AppCompatActivity implements
          * is also an instance of that type of handler.
          */
         mForecastAdapter = new ForecastAdapter(this, this);
+         emptyView = (TextView) findViewById(R.id.empty_view);
 
         /* Setting the adapter attaches it to the RecyclerView in our layout. */
         mRecyclerView.setAdapter(mForecastAdapter);
+
 
 
         showLoading();
@@ -150,6 +154,7 @@ public class MainActivity extends AppCompatActivity implements
          * created and (if the activity/fragment is currently started) starts the loader. Otherwise
          * the last created loader is re-used.
          */
+
         getSupportLoaderManager().initLoader(ID_FORECAST_LOADER, null, this);
 
         SunshineSyncUtils.initialize(this);
@@ -239,7 +244,14 @@ public class MainActivity extends AppCompatActivity implements
         mForecastAdapter.swapCursor(data);
         if (mPosition == RecyclerView.NO_POSITION) mPosition = 0;
         mRecyclerView.smoothScrollToPosition(mPosition);
-        if (data.getCount() != 0) showWeatherDataView();
+        if (data.getCount() != 0) {
+            showWeatherDataView();
+        }else {
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            mRecyclerView.setVisibility(View.INVISIBLE);
+
+            emptyView.setVisibility(View.VISIBLE);
+        }
     }
 
     /**
@@ -281,9 +293,11 @@ public class MainActivity extends AppCompatActivity implements
     private void showWeatherDataView() {
         /* First, hide the loading indicator */
         mLoadingIndicator.setVisibility(View.INVISIBLE);
+        emptyView.setVisibility(View.GONE);
         /* Finally, make sure the weather data is visible */
         mRecyclerView.setVisibility(View.VISIBLE);
     }
+
 
     /**
      * This method will make the loading indicator visible and hide the weather View and error
@@ -293,9 +307,11 @@ public class MainActivity extends AppCompatActivity implements
      * each view is currently visible or invisible.
      */
     private void showLoading() {
+        emptyView.setVisibility(View.GONE);
         /* Then, hide the weather data */
         mRecyclerView.setVisibility(View.INVISIBLE);
         /* Finally, show the loading indicator */
+
         mLoadingIndicator.setVisibility(View.VISIBLE);
     }
 
